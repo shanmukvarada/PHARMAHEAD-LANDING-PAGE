@@ -5,11 +5,12 @@ import {
   FileText, Banknote, RefreshCw, Zap, TrendingUp,
   Cpu, Database, MessageSquare, Monitor, Smartphone,
   Minus, Plus, Shield, ShieldAlert, ArrowRight, Activity,
-  ShoppingBag, Wallet, LayoutGrid, Briefcase, Moon, Sun
+  ShoppingBag, Wallet, LayoutGrid, Briefcase, Moon, Sun, Loader2,
+  Phone, Mail, MapPin, ArrowLeft
 } from 'lucide-react';
 
-const Logo = () => (
-  <div className="flex items-center gap-1.5 sm:gap-2">
+const Logo = ({ onClick }: { onClick?: () => void }) => (
+  <div className="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onClick={onClick}>
     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-ph2 flex items-center justify-center text-white font-heading font-black text-xs sm:text-sm tracking-tighter">
       PH
     </div>
@@ -19,20 +20,28 @@ const Logo = () => (
   </div>
 );
 
-const Navbar = ({ isDark, toggleTheme }: { isDark: boolean, toggleTheme: () => void }) => (
+const Navbar = ({ isDark, toggleTheme, onContact, onHome, currentPage }: { isDark: boolean, toggleTheme: () => void, onContact: () => void, onHome: () => void, currentPage: string }) => (
   <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
-      <Logo />
+      <Logo onClick={onHome} />
       <div className="hidden md:flex items-center gap-8 text-sm font-medium text-txt2 hover:*:text-txt transition-colors">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#compare">Compare</a>
+        {currentPage === 'home' ? (
+          <>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#compare">Compare</a>
+          </>
+        ) : (
+          <button onClick={onHome} className="cursor-pointer hover:text-txt transition-colors">Home</button>
+        )}
+        <button onClick={onContact} className={`cursor-pointer transition-colors ${currentPage === 'contact' ? 'text-txt border-b-2 border-ph border-solid pb-1' : 'hover:text-txt'}`}>Contact Us</button>
       </div>
       <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         <button onClick={toggleTheme} className="p-1 sm:p-2 text-txt2 hover:text-txt transition-colors shrink-0" aria-label="Toggle theme">
           {isDark ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
         </button>
+        <button onClick={onContact} className="text-sm font-medium text-txt2 hover:text-txt block sm:hidden">Contact</button>
         <a href="https://www.pharmahead.app/#/login" className="text-sm font-medium text-txt2 hover:text-txt hidden sm:block">Login</a>
         <a href="https://www.pharmahead.app/#/login" className="bg-ph2 text-white text-xs sm:text-sm font-semibold px-3 py-2 sm:px-6 sm:py-3 rounded-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] whitespace-nowrap shrink-0">
           Get Started
@@ -41,6 +50,207 @@ const Navbar = ({ isDark, toggleTheme }: { isDark: boolean, toggleTheme: () => v
     </div>
   </nav>
 );
+
+const ContactPage = ({ onHome }: { onHome: () => void }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    businessName: '',
+    businessType: '',
+    pincode: '',
+    city: '',
+    state: '',
+    software: '',
+    message: ''
+  });
+  const [isLoadingPincode, setIsLoadingPincode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (formData.pincode.length === 6) {
+      const fetchLocation = async () => {
+        setIsLoadingPincode(true);
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${formData.pincode}`);
+          const data = await res.json();
+          if (data && data[0] && data[0].Status === 'Success') {
+            const office = data[0].PostOffice[0];
+            setFormData(prev => ({ ...prev, city: office.District || office.Block || office.Name || '', state: office.State || '' }));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        setIsLoadingPincode(false);
+      };
+      fetchLocation();
+    }
+  }, [formData.pincode]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowSuccess(true);
+      
+      const text = `*New Lead from Website*\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Business Name:* ${formData.businessName}\n*Business Type:* ${formData.businessType}\n*Location:* ${formData.city}, ${formData.state} (${formData.pincode})\n*Current Software:* ${formData.software}\n*Message:* ${formData.message}`;
+      
+      window.open(`https://wa.me/917780763121?text=${encodeURIComponent(text)}`, '_blank');
+      
+      setTimeout(() => {
+        setShowSuccess(false);
+        setFormData({ name: '', phone: '', businessName: '', businessType: '', pincode: '', city: '', state: '', software: '', message: '' });
+      }, 2000);
+    }, 600);
+  };
+
+  return (
+    <div className="pt-24 md:pt-32 pb-12 px-4 sm:px-6 max-w-7xl mx-auto min-h-screen">
+      <button onClick={onHome} className="flex items-center gap-2 text-txt3 hover:text-txt transition-colors mb-8 text-sm font-medium">
+        <ArrowLeft size={16} /> Back to Home
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+        {/* Contact Info Side */}
+        <div className="space-y-10 fade-up">
+          <div>
+            <h1 className="text-[clamp(2.5rem,5vw,3.5rem)] font-heading font-black text-txt tracking-tight mb-4 leading-tight">Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-ph-lt to-[#A5B4FC]">touch.</span></h1>
+            <p className="text-lg text-txt2 leading-relaxed">
+              Have questions about PharmaHead? Our team is ready to help you digitize and scale your pharma distribution business. Fill out the form or reach us directly.
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            <div className="flex items-start gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-ph-border flex items-center justify-center text-ph-lt shrink-0 mt-1">
+                <Phone size={26} />
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Call Us</h4>
+                <p className="text-2xl font-heading font-bold text-txt hover:text-ph-lt transition-colors cursor-pointer truncate">+91 77807 63121</p>
+                <p className="text-sm text-txt3 mt-1">Mon - Sat, 9am to 6pm</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-ph-border flex items-center justify-center text-ph-lt shrink-0 mt-1">
+                <Mail size={26} />
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Email Us</h4>
+                <a href="mailto:sales@pharmahead.app" className="text-2xl font-heading font-bold text-txt hover:text-ph-lt transition-colors truncate block">sales@pharmahead.app</a>
+                <p className="text-sm text-txt3 mt-1">We usually respond within 2 hours</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-ph-border flex items-center justify-center text-ph-lt shrink-0 mt-1">
+                <Cpu size={26} />
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Built & Maintained By</h4>
+                <p className="text-2xl font-heading font-bold text-txt truncate">Leevon Labs Private Limited</p>
+                <p className="text-sm text-txt3 mt-1">Made with ❤️ in India</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Form Side */}
+        <div className="bg-dark/80 backdrop-blur-md border border-border2 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col fade-up overflow-hidden relative">
+          <div className="p-6 sm:p-8">
+            <h3 className="text-2xl font-heading font-bold text-txt mb-2">Send a Message</h3>
+            <p className="text-sm text-txt3 mb-8">We'll get back to you via WhatsApp to save time.</p>
+            
+            {showSuccess ? (
+              <div className="flex flex-col items-center justify-center py-10 text-center min-h-[400px]">
+                <div className="w-20 h-20 bg-[#10B981]/10 text-[#10B981] rounded-full flex items-center justify-center mb-6">
+                  <Check size={40} />
+                </div>
+                <h4 className="text-2xl font-bold text-txt mb-3">Request Sent!</h4>
+                <p className="text-txt2">Redirecting you to WhatsApp...</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Name</label>
+                    <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Your Name" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Phone (10 Digits)</label>
+                    <input required type="tel" pattern="[6-9][0-9]{9}" minLength={10} maxLength={10} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value.replace(/\D/g, '').substring(0,10)})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="e.g. 9876543210" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Business Name</label>
+                    <input required type="text" value={formData.businessName} onChange={e => setFormData({...formData, businessName: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Agency Name" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Business Type</label>
+                    <select required value={formData.businessType} onChange={e => setFormData({...formData, businessType: e.target.value})} className={`w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-ph-lt transition-colors appearance-none cursor-pointer ${formData.businessType === '' ? 'text-txt3' : 'text-txt'}`}>
+                      <option value="" disabled>Select business type...</option>
+                      <option value="Distributor">Distributor</option>
+                      <option value="Wholesaler">Wholesaler</option>
+                      <option value="Retailer">Retailer</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Pincode</label>
+                    <div className="relative">
+                      <input required type="number" value={formData.pincode} onChange={e => {
+                          const val = e.target.value.substring(0, 6);
+                          setFormData({...formData, pincode: val});
+                        }} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="110001" />
+                      {isLoadingPincode && <Loader2 className="absolute right-3 top-3.5 text-txt3 animate-spin h-4 w-4" />}
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">City</label>
+                    <input required readOnly type="text" value={formData.city} className="w-full bg-dark3/50 border border-border2 rounded-xl px-4 py-3 text-sm text-txt3 focus:outline-none cursor-not-allowed" placeholder="Auto-filled" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">State</label>
+                    <input required readOnly type="text" value={formData.state} className="w-full bg-dark3/50 border border-border2 rounded-xl px-4 py-3 text-sm text-txt3 focus:outline-none cursor-not-allowed" placeholder="Auto-filled" />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Current Software</label>
+                  <select required value={formData.software} onChange={e => setFormData({...formData, software: e.target.value})} className={`w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-ph-lt transition-colors appearance-none cursor-pointer ${formData.software === '' ? 'text-txt3' : 'text-txt'}`}>
+                    <option value="" disabled>Select your software...</option>
+                    <option value="Tally">Tally</option>
+                    <option value="Marg">Marg</option>
+                    <option value="Busy">Busy</option>
+                    <option value="RetailGraph">RetailGraph</option>
+                    <option value="Excel / Manual">Excel / Manual</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Query Message</label>
+                  <textarea required rows={4} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors resize-none" placeholder="What are you looking for?"></textarea>
+                </div>
+
+                <button type="submit" disabled={isSubmitting} className="w-full bg-ph2 hover:bg-ph-lt text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] mt-4 flex justify-center items-center gap-2 text-base">
+                  {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : 'Submit & Connect on WhatsApp \u2192'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Hero = () => (
   <section className="relative pt-[72px] md:pt-32 pb-4 md:pb-20 px-4 sm:px-6 max-w-7xl mx-auto flex flex-col items-center text-center fade-up z-10 min-h-[100vh] md:min-h-0 justify-start md:justify-center overflow-x-hidden md:overflow-visible">
@@ -498,46 +708,52 @@ const StatsBanner = () => (
   </section>
 );
 
-const Pricing = () => {
+const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
+  const [isYearly, setIsYearly] = useState(false);
+
   const plans = [
     {
       name: "Billing",
-      price: "₹499",
+      price: isYearly ? "₹399" : "₹499",
       period: "/month",
       desc: "Billing-first plan for GST invoice and collections.",
       badge: "Retailer ordering disabled",
       features: ["GST invoice creation", "Billing management", "Ledger", "Payment tracking", "Collection tracking"],
       buttonText: "Start Free Trial",
+      isContact: false,
       popular: false
     },
     {
       name: "Basic",
-      price: "₹999",
+      price: isYearly ? "₹799" : "₹999",
       period: "/month",
       desc: "Core operational suite for growing sub-wholesalers.",
       badge: "Up to 50 retailers",
       features: ["Order management", "Retailer management", "Billing and finance tools", "Inventory management", "Purchase orders", "Scheme management", "Support tickets"],
       buttonText: "Start Free Trial",
+      isContact: false,
       popular: true
     },
     {
       name: "Pro",
-      price: "₹1,499",
+      price: isYearly ? "₹1,199" : "₹1,499",
       period: "/month",
       desc: "Most popular for advanced operations with rack control.",
       badge: "Up to 100 retailers",
       features: ["Everything in Basic", "Rack Manager", "Personal / Priority Support"],
       buttonText: "Start Free Trial",
+      isContact: false,
       popular: false
     },
     {
       name: "Superior",
-      price: "₹1,999",
+      price: isYearly ? "₹1,599" : "₹1,999",
       period: "/month",
       desc: "Full suite with sales team enablement and unlimited scale.",
       badge: "Unlimited retailers",
       features: ["Everything in Pro", "Rack Manager", "Sales Team Management", "Personal Support"],
       buttonText: "Contact Sales",
+      isContact: true,
       popular: false
     }
   ];
@@ -552,14 +768,22 @@ const Pricing = () => {
 
       <div className="flex justify-center mb-6 md:mb-16">
         <div className="bg-dark3 border border-border2 p-1 md:p-1.5 rounded-full inline-flex items-center">
-          <button className="bg-ph2 text-white px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold shadow-[0_0_15px_rgba(79,70,229,0.4)]">Monthly</button>
-          <button className="text-txt3 px-4 py-2 md:px-6 md:py-2 rounded-full text-[11px] md:text-sm font-semibold hover:text-txt flex items-center gap-1.5">
-            Yearly <span className="bg-[#10B981]/15 text-[#10B981] text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#10B981]/20 hidden sm:inline-block">SAVE BIG</span>
+          <button 
+            onClick={() => setIsYearly(false)}
+            className={`${!isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold transition-all duration-300`}
+          >
+            Monthly
+          </button>
+          <button 
+            onClick={() => setIsYearly(true)}
+            className={`${isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2 rounded-full text-[11px] md:text-sm font-semibold flex items-center gap-1.5 transition-all duration-300`}
+          >
+            Yearly <span className={`${isYearly ? 'bg-white/25 text-white border-white/30' : 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/20'} text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full border hidden sm:inline-block transition-colors`}>SAVE BIG</span>
           </button>
         </div>
       </div>
 
-      <div className="flex flex-nowrap lg:grid lg:grid-cols-4 overflow-x-auto hide-scrollbar snap-x gap-3 md:gap-6 mb-8 md:mb-12 pb-4 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0">
+      <div className="flex flex-nowrap lg:grid lg:grid-cols-4 overflow-x-auto hide-scrollbar snap-x gap-3 md:gap-6 mb-8 md:mb-12 pb-4 pt-4 -mt-4 lg:pb-0 lg:pt-6 lg:-mt-6 -mx-4 px-4 lg:mx-0 lg:px-0">
         {plans.map((p, i) => (
           <div key={i} className={`flex-none w-[75vw] sm:w-[320px] lg:w-auto bg-dark2 rounded-xl md:rounded-2xl p-5 md:p-8 border transition-all duration-300 relative snap-center ${p.popular ? 'border-ph-lt shadow-[0_0_40px_rgba(79,70,229,0.2)]' : 'border-border2 hover:border-ph-border'}`}>
             {p.popular && <div className="absolute -top-2.5 md:-top-3 left-1/2 -translate-x-1/2 bg-[#efebff] text-ph2 text-[9px] md:text-[10px] font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-ph-lt/30 tracking-wide whitespace-nowrap">Most Popular</div>}
@@ -584,9 +808,15 @@ const Pricing = () => {
               ))}
             </ul>
             
-            <a href="https://www.pharmahead.app/#/login" className={`block text-center w-full py-2.5 md:py-3.5 rounded-lg text-xs md:text-base font-bold transition-colors ${p.popular ? 'bg-ph2 hover:bg-ph-lt text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]' : 'bg-overlay hover:bg-overlay-hover text-txt border border-border2'}`}>
-              {p.buttonText}
-            </a>
+            {p.isContact ? (
+              <button onClick={onOpenContact} className={`block text-center w-full py-2.5 md:py-3.5 rounded-lg text-xs md:text-base font-bold transition-colors ${p.popular ? 'bg-ph2 hover:bg-ph-lt text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]' : 'bg-overlay hover:bg-overlay-hover text-txt border border-border2'}`}>
+                {p.buttonText}
+              </button>
+            ) : (
+              <a href="https://www.pharmahead.app/#/login" className={`block text-center w-full py-2.5 md:py-3.5 rounded-lg text-xs md:text-base font-bold transition-colors ${p.popular ? 'bg-ph2 hover:bg-ph-lt text-white shadow-[0_0_20px_rgba(79,70,229,0.3)]' : 'bg-overlay hover:bg-overlay-hover text-txt border border-border2'}`}>
+                {p.buttonText}
+              </a>
+            )}
           </div>
         ))}
       </div>
@@ -667,7 +897,7 @@ const Comparison = () => {
   );
 };
 
-const FinalCTA = () => (
+const FinalCTA = ({ onOpenContact }: { onOpenContact: () => void }) => (
   <section className="py-8 md:py-32 px-4 sm:px-6 max-w-7xl mx-auto flex justify-center fade-up">
     <div className="bg-gradient-to-br from-dark2 to-dark3 border border-ph-lt/50 rounded-[20px] md:rounded-3xl p-5 md:p-16 text-center shadow-[0_0_100px_rgba(79,70,229,0.15)] relative overflow-hidden group w-full max-w-4xl">
       <div className="absolute inset-0 bg-ph-lt/10 blur-[100px] z-0 transition-opacity duration-1000 group-hover:opacity-100 opacity-50"></div>
@@ -678,9 +908,9 @@ const FinalCTA = () => (
           <a href="https://www.pharmahead.app/#/login" className="w-[85vw] sm:w-auto bg-ph2 hover:bg-ph-lt text-white px-4 py-3 md:px-8 md:py-4 rounded-xl text-sm md:text-base font-bold transition-all shadow-[0_0_30px_rgba(79,70,229,0.4)] hover:shadow-[0_0_50px_rgba(79,70,229,0.6)] flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
             Get Started Free <ArrowRight size={16} className="md:w-5 md:h-5" />
           </a>
-          <a href="https://www.pharmahead.app/#/login" className="block text-center w-[85vw] sm:w-auto bg-overlay hover:bg-overlay-hover text-txt border border-border2 px-4 py-3 md:px-8 md:py-4 rounded-xl text-sm md:text-base font-bold transition-all whitespace-nowrap shrink-0">
+          <button onClick={onOpenContact} className="block text-center w-[85vw] sm:w-auto bg-overlay hover:bg-overlay-hover text-txt border border-border2 px-4 py-3 md:px-8 md:py-4 rounded-xl text-sm md:text-base font-bold transition-all whitespace-nowrap shrink-0">
             Talk to Sales
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -762,6 +992,7 @@ const Footer = () => (
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
+  const [currentPage, setCurrentPage] = useState<'home' | 'contact'>('home');
 
   // Apply theme class
   useEffect(() => {
@@ -786,24 +1017,53 @@ export default function App() {
 
     document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [currentPage]); // re-run observer when page changes
 
   return (
     <div className="relative selection:bg-ph2 selection:text-white pb-0 overflow-x-hidden">
       {/* Background glow orb */}
       <div className="fixed -top-[10%] -right-[10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(79,70,229,0.15)_0%,transparent_70%)] blur-[80px] -z-10 pointer-events-none transition-opacity duration-300"></div>
 
-      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
-      <Hero />
-      <TrustStrip />
-      <ProblemSolution />
-      <Features />
-      <Roles />
-      <HowItWorks />
-      <StatsBanner />
-      <Pricing />
-      <Comparison />
-      <FinalCTA />
+      <Navbar 
+        isDark={isDark} 
+        toggleTheme={toggleTheme} 
+        onContact={() => {
+          setCurrentPage('contact');
+          window.scrollTo(0, 0);
+        }} 
+        onHome={() => {
+          setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }}
+        currentPage={currentPage}
+      />
+
+      {currentPage === 'contact' ? (
+        <ContactPage onHome={() => {
+          setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }} />
+      ) : (
+        <>
+          <Hero />
+          <TrustStrip />
+          <ProblemSolution />
+          <Features />
+          <Roles />
+          <HowItWorks />
+          <StatsBanner />
+          <Pricing onOpenContact={() => {
+            setCurrentPage('contact');
+            window.scrollTo(0, 0);
+          }} />
+          <Comparison />
+          <FinalCTA onOpenContact={() => {
+            setCurrentPage('contact');
+            window.scrollTo(0, 0);
+          }} />
+        </>
+      )}
+      
       <Footer />
     </div>
   );
