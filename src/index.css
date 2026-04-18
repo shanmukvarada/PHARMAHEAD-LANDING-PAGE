@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --theme-ph: #4F46E5;
+  --theme-ph2: #6366F1;
+  --theme-ph-lt: #818CF8;
+  --theme-ph-xlt: #EEF2FF;
+  --theme-bg: #FFFFFF;
+  --theme-bg2: #F8FAFC;
+  --theme-bg3: #F1F5F9;
+  --theme-txt: #0F172A;
+  --theme-txt2: #475569;
+  --theme-txt3: #64748B;
+  --theme-ph-border: rgba(79, 70, 229, 0.15);
+  --theme-border2: rgba(15, 23, 42, 0.08);
+  --theme-overlay: rgba(15, 23, 42, 0.03);
+  --theme-overlay-hover: rgba(15, 23, 42, 0.06);
+}
+
+.dark {
+  --theme-ph: #3B30C8;
+  --theme-ph2: #4F46E5;
+  --theme-ph-lt: #6366F1;
+  --theme-ph-xlt: #EEF2FF;
+  --theme-bg: #0A0B14;
+  --theme-bg2: #0F1022;
+  --theme-bg3: #14152a;
+  --theme-txt: #F0F0FF;
+  --theme-txt2: #9294B8;
+  --theme-txt3: #5F618A;
+  --theme-ph-border: rgba(99,102,241,0.15);
+  --theme-border2: rgba(255,255,255,0.06);
+  --theme-overlay: rgba(255, 255, 255, 0.05);
+  --theme-overlay-hover: rgba(255, 255, 255, 0.1);
+}
+
+@theme {
+  --font-heading: "Inter", -apple-system, sans-serif;
+  --font-body: "Inter", -apple-system, sans-serif;
+  --color-ph: var(--theme-ph);
+  --color-ph2: var(--theme-ph2);
+  --color-ph-lt: var(--theme-ph-lt);
+  --color-ph-xlt: var(--theme-ph-xlt);
+  --color-dark: var(--theme-bg);
+  --color-dark2: var(--theme-bg2);
+  --color-dark3: var(--theme-bg3);
+  --color-txt: var(--theme-txt);
+  --color-txt2: var(--theme-txt2);
+  --color-txt3: var(--theme-txt3);
+  --color-ph-border: var(--theme-ph-border);
+  --color-border2: var(--theme-border2);
+  --color-overlay: var(--theme-overlay);
+  --color-overlay-hover: var(--theme-overlay-hover);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-dark);
+  color: var(--color-txt);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+/* Subtle radial grid texture overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--color-ph-border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.15;
+}
+
+/* Scroll animation utility classes */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.glass-nav {
+  background: color-mix(in srgb, var(--color-dark) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-ph-border);
+}
+
+/* 3D Laptop Animation */
+@keyframes float-rotate {
+  0% { 
+    transform: translateY(0px) rotateY(-12deg) rotateX(2deg); 
+  }
+  50% { 
+    transform: translateY(-20px) rotateY(12deg) rotateX(-2deg); 
+  }
+  100% { 
+    transform: translateY(0px) rotateY(-12deg) rotateX(2deg); 
+  }
+}
+
+.animate-laptop-3d {
+  animation: float-rotate 14s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Hide scrollbar for features tab container on mobile */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
