@@ -116,7 +116,7 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
         {/* Contact Info Side */}
         <div className="space-y-10 fade-up">
           <div>
-            <h1 className="text-[clamp(2.5rem,5vw,3.5rem)] font-heading font-black text-txt tracking-tight mb-4 leading-tight">Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-ph-lt to-[#A5B4FC]">touch.</span></h1>
+            <h1 className="text-[clamp(2.5rem,5vw,3.5rem)] font-heading font-black text-txt tracking-tight mb-4 leading-tight">Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-grad-1 to-grad-2">touch.</span></h1>
             <p className="text-lg text-txt2 leading-relaxed">
               Have questions about PharmaHead? Our team is ready to help you digitize and scale your pharma distribution business. Fill out the form or reach us directly.
             </p>
@@ -128,8 +128,8 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
                 <Phone size={26} />
               </div>
               <div className="flex-1 overflow-hidden">
-                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Call Us</h4>
-                <p className="text-2xl font-heading font-bold text-txt hover:text-ph-lt transition-colors cursor-pointer truncate">+91 77807 63121</p>
+                <p className="text-xs font-semibold text-txt3 uppercase tracking-[0.15em] mb-1.5">Call Us</p>
+                <p className="text-xl sm:text-2xl font-sans font-bold text-txt hover:text-ph-lt transition-colors cursor-pointer truncate">+91 77807 63121</p>
                 <p className="text-sm text-txt3 mt-1">Mon - Sat, 9am to 6pm</p>
               </div>
             </div>
@@ -139,8 +139,8 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
                 <Mail size={26} />
               </div>
               <div className="flex-1 overflow-hidden">
-                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Email Us</h4>
-                <a href="mailto:sales@pharmahead.app" className="text-2xl font-heading font-bold text-txt hover:text-ph-lt transition-colors truncate block">sales@pharmahead.app</a>
+                <p className="text-xs font-semibold text-txt3 uppercase tracking-[0.15em] mb-1.5">Email Us</p>
+                <a href="mailto:sales@pharmahead.app" className="text-xl sm:text-2xl font-sans font-bold text-txt hover:text-ph-lt transition-colors truncate block">sales@pharmahead.app</a>
                 <p className="text-sm text-txt3 mt-1">We usually respond within 2 hours</p>
               </div>
             </div>
@@ -150,16 +150,16 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
                 <Cpu size={26} />
               </div>
               <div className="flex-1 overflow-hidden">
-                <h4 className="text-xs font-bold text-txt3 uppercase tracking-widest mb-1.5">Built & Maintained By</h4>
-                <p className="text-2xl font-heading font-bold text-txt truncate">Leevon Labs Private Limited</p>
-                <p className="text-sm text-txt3 mt-1">Made with ❤️ in India</p>
+                <p className="text-xs font-semibold text-txt3 uppercase tracking-[0.15em] mb-1.5">Built & Maintained By</p>
+                <p className="text-xl sm:text-2xl font-sans font-bold text-txt truncate">Leevon Labs Private Limited</p>
+                <a href="https://leevonlabs.tech" target="_blank" rel="noopener noreferrer" className="text-sm text-txt3 hover:text-ph-lt transition-colors mt-1 block">leevonlabs.tech</a>
               </div>
             </div>
           </div>
         </div>
 
         {/* Form Side */}
-        <div className="bg-dark/80 backdrop-blur-md border border-border2 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col fade-up overflow-hidden relative">
+        <div className="bg-[var(--theme-form-bg)] backdrop-blur-md border border-border2 rounded-2xl shadow-[0_0_50px_var(--theme-shadow-heavy)] flex flex-col fade-up overflow-hidden relative">
           <div className="p-6 sm:p-8">
             <h3 className="text-2xl font-heading font-bold text-txt mb-2">Send a Message</h3>
             <p className="text-sm text-txt3 mb-8">We'll get back to you via WhatsApp to save time.</p>
@@ -258,7 +258,7 @@ const Hero = () => (
       B2B SaaS for Pharma Distributors in India
     </div>
     <h1 className="text-[clamp(1.75rem,7vw,3.75rem)] md:text-6xl font-heading font-bold text-txt mb-2 md:mb-6 leading-[1.1] md:leading-[1.1] tracking-tight text-balance shrink-0">
-      Your entire pharma business, <span className="text-transparent bg-clip-text bg-gradient-to-r from-ph-lt to-[#A5B4FC]">digitized.</span>
+      Your entire pharma business, <span className="text-transparent bg-clip-text bg-gradient-to-r from-grad-1 to-grad-2">digitized.</span>
     </h1>
     <p className="text-[clamp(0.85rem,3.5vw,1rem)] md:text-base text-txt2 max-w-3xl mb-4 md:mb-8 leading-[1.4] md:leading-[1.6] shrink-0 px-2 lg:px-0">
       The complete operating platform for Indian pharma distributors and retailers — orders, inventory, GST, collections, and field sales. All connected. All automatic.
@@ -582,7 +582,7 @@ const Features = () => {
           </div>
 
           <div className="order-1 md:order-2">
-            <div className="w-full bg-dark3 border border-border2 rounded-xl shadow-[0_40px_100px_rgba(0,0,0,0.4)] overflow-hidden">
+            <div className="w-full bg-dark3 border border-border2 rounded-xl shadow-[0_40px_100px_var(--theme-shadow-heavy)] overflow-hidden">
               <div className="h-12 bg-overlay border-b border-border2 flex items-center px-4 justify-between">
                 <div className="text-txt text-sm font-semibold">{activeData.cardTitle}</div>
                 <div className="flex gap-1.5">
@@ -991,7 +991,7 @@ const Footer = () => (
 );
 
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'contact'>('home');
 
   // Apply theme class
@@ -1022,7 +1022,7 @@ export default function App() {
   return (
     <div className="relative selection:bg-ph2 selection:text-white pb-0 overflow-x-hidden">
       {/* Background glow orb */}
-      <div className="fixed -top-[10%] -right-[10%] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(79,70,229,0.15)_0%,transparent_70%)] blur-[80px] -z-10 pointer-events-none transition-opacity duration-300"></div>
+      <div className="fixed -top-[10%] -right-[10%] w-[500px] h-[500px] bg-[radial-gradient(circle,var(--theme-glow-start)_0%,var(--theme-glow-end)_70%)] blur-[80px] -z-10 pointer-events-none transition-opacity duration-300"></div>
 
       <Navbar 
         isDark={isDark} 
@@ -1061,6 +1061,21 @@ export default function App() {
             setCurrentPage('contact');
             window.scrollTo(0, 0);
           }} />
+          
+          {/* Floating WhatsApp Button */}
+          <button
+            onClick={() => {
+              setCurrentPage('contact');
+              window.scrollTo(0, 0);
+            }}
+            className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_4px_14px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(37,211,102,0.6)] transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#25D366]/50 group"
+            aria-label="Contact us on WhatsApp"
+            title="Chat with us"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16" className="transform group-hover:scale-110 transition-transform duration-300 ml-[1px] mb-[1px]">
+              <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+            </svg>
+          </button>
         </>
       )}
       

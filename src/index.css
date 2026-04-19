@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --theme-ph: #4F46E5;
-  --theme-ph2: #6366F1;
-  --theme-ph-lt: #818CF8;
+  --theme-ph: #3730A3;
+  --theme-ph2: #4F46E5;
+  --theme-ph-lt: #4338CA;
   --theme-ph-xlt: #EEF2FF;
   --theme-bg: #FFFFFF;
   --theme-bg2: #F8FAFC;
@@ -11,10 +11,16 @@
   --theme-txt: #0F172A;
   --theme-txt2: #475569;
   --theme-txt3: #64748B;
-  --theme-ph-border: rgba(79, 70, 229, 0.15);
-  --theme-border2: rgba(15, 23, 42, 0.08);
-  --theme-overlay: rgba(15, 23, 42, 0.03);
-  --theme-overlay-hover: rgba(15, 23, 42, 0.06);
+  --theme-ph-border: rgba(79, 70, 229, 0.2);
+  --theme-border2: rgba(15, 23, 42, 0.12);
+  --theme-overlay: rgba(15, 23, 42, 0.04);
+  --theme-overlay-hover: rgba(15, 23, 42, 0.08);
+  --theme-shadow-heavy: rgba(15, 23, 42, 0.15);
+  --theme-form-bg: rgba(255, 255, 255, 0.9);
+  --theme-glow-start: rgba(79, 70, 229, 0.08);
+  --theme-glow-end: transparent;
+  --theme-grad-1: #4F46E5;
+  --theme-grad-2: #818CF8;
 }
 
 .dark {
@@ -28,10 +34,16 @@
   --theme-txt: #F0F0FF;
   --theme-txt2: #9294B8;
   --theme-txt3: #5F618A;
-  --theme-ph-border: rgba(99,102,241,0.15);
-  --theme-border2: rgba(255,255,255,0.06);
+  --theme-ph-border: rgba(99, 102, 241, 0.15);
+  --theme-border2: rgba(255, 255, 255, 0.06);
   --theme-overlay: rgba(255, 255, 255, 0.05);
   --theme-overlay-hover: rgba(255, 255, 255, 0.1);
+  --theme-shadow-heavy: rgba(0, 0, 0, 0.5);
+  --theme-form-bg: rgba(10, 11, 20, 0.8);
+  --theme-glow-start: rgba(79, 70, 229, 0.15);
+  --theme-glow-end: transparent;
+  --theme-grad-1: #6366F1;
+  --theme-grad-2: #A5B4FC;
 }
 
 @theme {
@@ -51,6 +63,8 @@
   --color-border2: var(--theme-border2);
   --color-overlay: var(--theme-overlay);
   --color-overlay-hover: var(--theme-overlay-hover);
+  --color-grad-1: var(--theme-grad-1);
+  --color-grad-2: var(--theme-grad-2);
 }
 
 @layer utilities {
