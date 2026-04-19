@@ -290,19 +290,10 @@ const Hero = () => (
           {/* Inner Screen */}
           <div className="relative bg-[#0A0A0A] rounded-md md:rounded-xl overflow-hidden aspect-[16/10] ring-1 ring-white/10 mt-2 md:mt-4">
             <img 
-              src="/dashboard.png.png" 
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" 
               alt="PharmaHead Sub-Wholesale OS Dashboard" 
               className="w-full h-full object-cover object-left-top transition-transform duration-1000 group-hover:scale-[1.02]"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                if (!target.dataset.retried) {
-                  target.dataset.retried = 'true';
-                  target.src = '/dashboard.png';
-                } else if (!target.dataset.finalFallback) {
-                  target.dataset.finalFallback = 'true';
-                  target.src = 'https://images.unsplash.com/photo-1542382103-f0a9ea0a221f?q=80&w=2670&auto=format&fit=crop';
-                }
-              }}
+              crossOrigin="anonymous"
             />
             {/* Subtle reflection overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.01] to-white/[0.05] pointer-events-none"></div>
