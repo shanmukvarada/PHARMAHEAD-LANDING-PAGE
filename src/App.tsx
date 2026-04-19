@@ -290,10 +290,9 @@ const Hero = () => (
           {/* Inner Screen */}
           <div className="relative bg-[#0A0A0A] rounded-md md:rounded-xl overflow-hidden aspect-[16/10] ring-1 ring-white/10 mt-2 md:mt-4">
             <img 
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" 
+              src="/dashboard.png.png" 
               alt="PharmaHead Sub-Wholesale OS Dashboard" 
               className="w-full h-full object-cover object-left-top transition-transform duration-1000 group-hover:scale-[1.02]"
-              crossOrigin="anonymous"
             />
             {/* Subtle reflection overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.01] to-white/[0.05] pointer-events-none"></div>
