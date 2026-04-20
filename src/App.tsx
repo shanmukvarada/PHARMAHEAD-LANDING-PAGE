@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { PrivacyPolicyPage } from './PrivacyPolicy';
 import { TermsOfServicePage } from './TermsOfService';
+import dashboardImg from './assets/dashboard.png';
 
 const Logo = ({ onClick }: { onClick?: () => void }) => (
   <div className="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onClick={onClick}>
@@ -292,7 +293,7 @@ const Hero = () => (
           {/* Inner Screen */}
           <div className="relative bg-[#0A0A0A] rounded-md md:rounded-xl overflow-hidden aspect-[16/10] ring-1 ring-white/10 mt-2 md:mt-4">
             <img 
-              src="/dashboard.png.png" 
+              src={dashboardImg} 
               alt="PharmaHead Sub-Wholesale OS Dashboard" 
               className="w-full h-full object-cover object-left-top transition-transform duration-1000 group-hover:scale-[1.02]"
             />
