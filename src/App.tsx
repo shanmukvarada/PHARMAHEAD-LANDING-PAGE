@@ -8,6 +8,8 @@ import {
   ShoppingBag, Wallet, LayoutGrid, Briefcase, Moon, Sun, Loader2,
   Phone, Mail, MapPin, ArrowLeft
 } from 'lucide-react';
+import { PrivacyPolicyPage } from './PrivacyPolicy';
+import { TermsOfServicePage } from './TermsOfService';
 
 const Logo = ({ onClick }: { onClick?: () => void }) => (
   <div className="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onClick={onClick}>
@@ -907,7 +909,7 @@ const FinalCTA = ({ onOpenContact }: { onOpenContact: () => void }) => (
   </section>
 );
 
-const Footer = () => (
+const Footer = ({ onOpenPrivacy, onOpenTerms }: { onOpenPrivacy: () => void, onOpenTerms: () => void }) => (
   <footer className="border-t border-border2 bg-dark py-8 md:py-16 px-4 sm:px-6 fade-up">
     <div className="max-w-7xl mx-auto">
       <div className="flex flex-nowrap md:grid sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-12 mb-8 md:mb-16 overflow-x-auto hide-scrollbar snap-x pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
@@ -958,8 +960,8 @@ const Footer = () => (
           <h4 className="text-txt text-sm md:text-base font-bold mb-3 md:mb-4">Company</h4>
           <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm text-txt3">
             <li><a href="#" className="hover:text-ph-lt transition-colors">About Us</a></li>
-            <li><a href="#" className="hover:text-ph-lt transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-ph-lt transition-colors">Terms of Service</a></li>
+            <li><button onClick={(e) => { e.preventDefault(); onOpenPrivacy(); window.scrollTo(0,0); }} className="hover:text-ph-lt transition-colors">Privacy Policy</button></li>
+            <li><button onClick={(e) => { e.preventDefault(); onOpenTerms(); window.scrollTo(0,0); }} className="hover:text-ph-lt transition-colors">Terms of Service</button></li>
           </ul>
         </div>
         <div className="flex-none w-[75vw] sm:w-auto snap-center sm:col-span-2 lg:col-span-1 border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
@@ -982,7 +984,7 @@ const Footer = () => (
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'home' | 'contact'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'contact' | 'privacy' | 'terms'>('home');
 
   // Apply theme class
   useEffect(() => {
@@ -1028,7 +1030,17 @@ export default function App() {
         currentPage={currentPage}
       />
 
-      {currentPage === 'contact' ? (
+      {currentPage === 'terms' ? (
+        <TermsOfServicePage onHome={() => {
+          setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }} />
+      ) : currentPage === 'privacy' ? (
+        <PrivacyPolicyPage onHome={() => {
+          setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }} />
+      ) : currentPage === 'contact' ? (
         <ContactPage onHome={() => {
           setCurrentPage('home');
           window.scrollTo(0, 0);
@@ -1069,7 +1081,7 @@ export default function App() {
         </>
       )}
       
-      <Footer />
+      <Footer onOpenPrivacy={() => setCurrentPage('privacy')} onOpenTerms={() => setCurrentPage('terms')} />
     </div>
   );
 }
