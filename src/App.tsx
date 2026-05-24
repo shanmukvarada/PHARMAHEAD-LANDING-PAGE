@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { PrivacyPolicyPage } from './PrivacyPolicy';
 import { TermsOfServicePage } from './TermsOfService';
-import dashboardImg from './assets/dashboard.png';
 
 const Logo = ({ onClick }: { onClick?: () => void }) => (
   <div className="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onClick={onClick}>
@@ -293,7 +292,7 @@ const Hero = () => (
           {/* Inner Screen */}
           <div className="relative bg-[#0A0A0A] rounded-md md:rounded-xl overflow-hidden aspect-[16/10] ring-1 ring-white/10 mt-2 md:mt-4">
             <img 
-              src={dashboardImg} 
+              src="/dashboard.png" 
               alt="PharmaHead Sub-Wholesale OS Dashboard" 
               className="w-full h-full object-cover object-left-top transition-transform duration-1000 group-hover:scale-[1.02]"
             />
@@ -706,9 +705,10 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
 
   const plans = [
     {
-      name: "Billing",
-      price: isYearly ? "₹399" : "₹499",
+      name: "Starter",
+      price: isYearly ? "₹399" : "₹449",
       period: "/month",
+      billingText: isYearly ? "Billed ₹4,788 yearly" : "Billed ₹2,694 every 6 months",
       desc: "Billing-first plan for GST invoice and collections.",
       badge: "Retailer ordering disabled",
       features: ["GST invoice creation", "Billing management", "Ledger", "Payment tracking", "Collection tracking"],
@@ -718,8 +718,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Basic",
-      price: isYearly ? "₹799" : "₹999",
+      price: isYearly ? "₹599" : "₹649",
       period: "/month",
+      billingText: isYearly ? "Billed ₹7,188 yearly" : "Billed ₹3,894 every 6 months",
       desc: "Core operational suite for growing sub-wholesalers.",
       badge: "Up to 50 retailers",
       features: ["Order management", "Retailer management", "Billing and finance tools", "Inventory management", "Purchase orders", "Scheme management", "Support tickets"],
@@ -729,8 +730,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Pro",
-      price: isYearly ? "₹1,199" : "₹1,499",
+      price: isYearly ? "₹799" : "₹749",
       period: "/month",
+      billingText: isYearly ? "Billed ₹9,588 yearly" : "Billed ₹4,494 every 6 months",
       desc: "Most popular for advanced operations with rack control.",
       badge: "Up to 100 retailers",
       features: ["Everything in Basic", "Rack Manager", "Personal / Priority Support"],
@@ -740,8 +742,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Superior",
-      price: isYearly ? "₹1,599" : "₹1,999",
+      price: isYearly ? "₹1,200" : "₹1,250",
       period: "/month",
+      billingText: isYearly ? "Billed ₹14,400 yearly" : "Billed ₹7,500 every 6 months",
       desc: "Full suite with sales team enablement and unlimited scale.",
       badge: "Unlimited retailers",
       features: ["Everything in Pro", "Rack Manager", "Sales Team Management", "Personal Support"],
@@ -765,13 +768,13 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
             onClick={() => setIsYearly(false)}
             className={`${!isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold transition-all duration-300`}
           >
-            Monthly
+            6 Months
           </button>
           <button 
             onClick={() => setIsYearly(true)}
             className={`${isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2 rounded-full text-[11px] md:text-sm font-semibold flex items-center gap-1.5 transition-all duration-300`}
           >
-            Yearly <span className={`${isYearly ? 'bg-white/25 text-white border-white/30' : 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/20'} text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full border hidden sm:inline-block transition-colors`}>SAVE BIG</span>
+            1 Year
           </button>
         </div>
       </div>
@@ -784,7 +787,8 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
             <h3 className="text-[clamp(1rem,3vw,1.25rem)] md:text-xl font-bold text-txt mb-1 md:mb-2">{p.name}</h3>
             <p className="text-[11px] md:text-sm text-txt3 h-8 md:h-10 mb-4 md:mb-6 leading-tight">{p.desc}</p>
             
-            <div className="mb-4 md:mb-6"><span className="text-2xl md:text-4xl font-black text-txt">{p.price}</span><span className="text-txt3 font-medium text-xs md:text-sm">{p.period}</span></div>
+            <div className="mb-2 md:mb-3"><span className="text-2xl md:text-4xl font-black text-txt">{p.price}</span><span className="text-txt3 font-medium text-xs md:text-sm">{p.period}</span></div>
+            <div className="text-txt3 text-[10px] md:text-xs font-semibold mb-4 md:mb-6">{p.billingText}</div>
             
             <div className={`text-center py-2 rounded-md md:rounded-lg text-[10px] md:text-sm font-semibold mb-4 md:mb-8 border ${p.popular ? 'bg-ph-lt/10 text-ph-lt border-ph-lt/20' : 'bg-overlay text-txt2 border-white/5'} whitespace-nowrap px-1`}>
               {p.badge}
@@ -911,36 +915,38 @@ const FinalCTA = ({ onOpenContact }: { onOpenContact: () => void }) => (
 );
 
 const Footer = ({ onOpenPrivacy, onOpenTerms }: { onOpenPrivacy: () => void, onOpenTerms: () => void }) => (
-  <footer className="border-t border-border2 bg-dark py-8 md:py-16 px-4 sm:px-6 fade-up">
+  <footer className="border-t border-border2 bg-dark/80 backdrop-blur-2xl py-10 md:py-16 px-4 sm:px-6 relative z-10 transition-colors duration-300">
     <div className="max-w-7xl mx-auto">
-      <div className="flex flex-nowrap md:grid sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-12 mb-8 md:mb-16 overflow-x-auto hide-scrollbar snap-x pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
-        <div className="flex-none w-[75vw] sm:w-auto snap-center sm:col-span-2 lg:col-span-1 border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
+      <div className="flex flex-col md:flex-row lg:grid lg:grid-cols-5 gap-8 lg:gap-6 mb-8 md:mb-12">
+        <div className="lg:col-span-1 pr-4">
           <Logo />
-          <p className="text-txt3 text-[11px] md:text-sm mt-3 md:mt-4 font-medium mb-6 md:mb-8">Your entire pharma business, digitized.</p>
+          <p className="text-txt2 text-[14px] mt-4 font-medium leading-relaxed max-w-[220px] mb-6 relative -top-2">
+            Your entire pharma business,<br/>digitized.
+          </p>
           
           <div className="pt-2">
-            <p className="text-txt3 text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-2 md:mb-3">Built & Maintained By</p>
+            <p className="text-txt3 text-[10px] font-bold uppercase tracking-widest mb-3">Built & Maintained By</p>
             <a href="https://leevonlabs.tech" target="_blank" rel="noopener noreferrer" className="inline-flex flex-col gap-1 group">
-              <div className="flex items-center gap-2 md:gap-3">
-                <svg viewBox="0 0 100 100" className="w-6 h-6 md:w-8 md:h-8 text-txt group-hover:text-ph-lt transition-colors fill-current" xmlns="http://www.w3.org/2000/svg">
+              <div className="flex items-center gap-2.5">
+                <svg viewBox="0 0 100 100" className="w-7 h-7 text-txt group-hover:text-ph-lt transition-colors fill-current shrink-0" xmlns="http://www.w3.org/2000/svg">
                   {/* Outer Left Wedge shape */}
                   <polygon points="10,90 35,10 50,10" />
                   {/* Inner Right Cut-out shape forming lightning "L" */}
                   <polygon points="38,50 98,50 20.4,85.3" />
                 </svg>
-                <span className="text-txt group-hover:text-ph-lt font-sans transition-colors font-black tracking-[0.12em] text-sm md:text-lg mt-0.5">
+                <span className="text-txt group-hover:text-ph-lt font-sans transition-colors font-black tracking-[0.15em] text-[17px] mt-0.5">
                   LEEVON LABS
                 </span>
               </div>
-              <span className="text-txt3 group-hover:text-txt transition-colors text-[10px] md:text-xs font-semibold ml-8 md:ml-11">
+              <span className="text-txt2 group-hover:text-txt transition-colors text-sm font-semibold ml-10">
                 leevonlabs.tech
               </span>
             </a>
           </div>
         </div>
-        <div className="flex-none w-[60vw] sm:w-auto snap-center border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
-          <h4 className="text-txt text-sm md:text-base font-bold mb-3 md:mb-4">Product</h4>
-          <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm text-txt3">
+        <div className="lg:ml-auto mt-6 lg:mt-0">
+          <h4 className="text-txt text-[15px] md:text-[16px] font-bold mb-4 tracking-tight">Product</h4>
+          <ul className="space-y-2.5 text-[13px] md:text-[14px] text-txt2 font-medium">
             <li><a href="#" className="hover:text-ph-lt transition-colors">Features</a></li>
             <li><a href="#" className="hover:text-ph-lt transition-colors">Pricing</a></li>
             <li><a href="#" className="hover:text-ph-lt transition-colors">Desktop App</a></li>
@@ -948,35 +954,35 @@ const Footer = ({ onOpenPrivacy, onOpenTerms }: { onOpenPrivacy: () => void, onO
             <li><a href="#" className="hover:text-ph-lt transition-colors">Migration</a></li>
           </ul>
         </div>
-        <div className="flex-none w-[60vw] sm:w-auto snap-center border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
-          <h4 className="text-txt text-sm md:text-base font-bold mb-3 md:mb-4">For</h4>
-          <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm text-txt3">
+        <div className="lg:ml-auto mt-6 lg:mt-0">
+          <h4 className="text-txt text-[15px] md:text-[16px] font-bold mb-4 tracking-tight">For</h4>
+          <ul className="space-y-2.5 text-[13px] md:text-[14px] text-txt2 font-medium">
             <li><a href="#" className="hover:text-ph-lt transition-colors">Super Stockists</a></li>
             <li><a href="#" className="hover:text-ph-lt transition-colors">Distributors</a></li>
             <li><a href="#" className="hover:text-ph-lt transition-colors">Retail Pharmacies</a></li>
             <li><a href="#" className="hover:text-ph-lt transition-colors">Field Sales Teams</a></li>
           </ul>
         </div>
-        <div className="flex-none w-[60vw] sm:w-auto snap-center border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
-          <h4 className="text-txt text-sm md:text-base font-bold mb-3 md:mb-4">Company</h4>
-          <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm text-txt3">
+        <div className="lg:ml-auto mt-6 lg:mt-0">
+          <h4 className="text-txt text-[15px] md:text-[16px] font-bold mb-4 tracking-tight">Company</h4>
+          <ul className="space-y-2.5 text-[13px] md:text-[14px] text-txt2 font-medium">
             <li><a href="#" className="hover:text-ph-lt transition-colors">About Us</a></li>
             <li><button onClick={(e) => { e.preventDefault(); onOpenPrivacy(); window.scrollTo(0,0); }} className="hover:text-ph-lt transition-colors">Privacy Policy</button></li>
             <li><button onClick={(e) => { e.preventDefault(); onOpenTerms(); window.scrollTo(0,0); }} className="hover:text-ph-lt transition-colors">Terms of Service</button></li>
           </ul>
         </div>
-        <div className="flex-none w-[75vw] sm:w-auto snap-center sm:col-span-2 lg:col-span-1 border border-border2 md:border-none p-4 md:p-0 rounded-xl md:rounded-none">
-          <h4 className="text-txt text-sm md:text-base font-bold mb-3 md:mb-4">Contact</h4>
-          <ul className="space-y-2 md:space-y-3 text-[11px] md:text-sm text-txt3">
-            <li><a href="mailto:admin@pharmahead.app" className="hover:text-ph-lt transition-colors break-words">admin@pharmahead.app</a></li>
+        <div className="lg:ml-auto mt-6 lg:mt-0">
+          <h4 className="text-txt text-[15px] md:text-[16px] font-bold mb-4 tracking-tight">Contact</h4>
+          <ul className="space-y-2.5 text-[13px] md:text-[14px] text-txt2 font-medium">
+            <li><a href="mailto:admin@pharmahead.app" className="hover:text-ph-lt transition-colors">admin@pharmahead.app</a></li>
             <li>Admin + Support: +91 9398958886</li>
             <li>Sales + Support: +91 7780763121</li>
             <li>Mon – Sat, 9am – 6pm</li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-border2 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-[10px] md:text-xs text-txt3">
-        <p className="text-center md:text-left">© 2026 <a href="https://leevonlabs.tech" target="_blank" rel="noopener noreferrer" className="hover:text-txt transition-colors">Leevon Labs Private Limited</a>. All rights reserved.</p>
+      <div className="border-t border-border2 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[13px] font-medium text-txt2">
+        <p className="text-center sm:text-left">© 2026 Leevon Labs Private Limited. All rights reserved.</p>
         <p>pharmahead.app · Made in India 🇮🇳</p>
       </div>
     </div>
