@@ -60,7 +60,9 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
     businessName: '',
     businessType: '',
     pincode: '',
+    area: '',
     city: '',
+    district: '',
     state: '',
     software: '',
     message: ''
@@ -70,24 +72,9 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    if (formData.pincode.length === 6) {
-      const fetchLocation = async () => {
-        setIsLoadingPincode(true);
-        try {
-          const res = await fetch(`https://api.postalpincode.in/pincode/${formData.pincode}`);
-          const data = await res.json();
-          if (data && data[0] && data[0].Status === 'Success') {
-            const office = data[0].PostOffice[0];
-            setFormData(prev => ({ ...prev, city: office.District || office.Block || office.Name || '', state: office.State || '' }));
-          }
-        } catch (e) {
-          // ignore error to prevent blocking the user
-        }
-        setIsLoadingPincode(false);
-      };
-      fetchLocation();
-    }
-  }, [formData.pincode]);
+    // Cleanup if any timers were added
+    return () => {};
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,13 +84,13 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
       setIsSubmitting(false);
       setShowSuccess(true);
       
-      const text = `*New Lead from Website*\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Business Name:* ${formData.businessName}\n*Business Type:* ${formData.businessType}\n*Location:* ${formData.city}, ${formData.state} (${formData.pincode})\n*Current Software:* ${formData.software}\n*Message:* ${formData.message}`;
+      const text = `*New Lead from Website*\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Business Name:* ${formData.businessName}\n*Business Type:* ${formData.businessType}\n*Location:* ${formData.area}, ${formData.city}, ${formData.district}, ${formData.state} (${formData.pincode})\n*Current Software:* ${formData.software}\n*Message:* ${formData.message}`;
       
       window.open(`https://wa.me/917780763121?text=${encodeURIComponent(text)}`, '_blank');
       
       setTimeout(() => {
         setShowSuccess(false);
-        setFormData({ name: '', phone: '', businessName: '', businessType: '', pincode: '', city: '', state: '', software: '', message: '' });
+        setFormData({ name: '', phone: '', businessName: '', businessType: '', pincode: '', area: '', city: '', district: '', state: '', software: '', message: '' });
       }, 2000);
     }, 600);
   };
@@ -183,14 +170,14 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Phone (10 Digits)</label>
-                    <input required type="tel" pattern="[6-9][0-9]{9}" minLength={10} maxLength={10} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value.replace(/\D/g, '').substring(0,10)})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="e.g. 9876543210" />
+                    <input type="tel" pattern="[6-9][0-9]{9}" minLength={10} maxLength={10} value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value.replace(/\D/g, '').substring(0,10)})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Phone Number" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Business Name</label>
-                    <input required type="text" value={formData.businessName} onChange={e => setFormData({...formData, businessName: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Agency Name" />
+                    <input type="text" value={formData.businessName} onChange={e => setFormData({...formData, businessName: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Agency Name" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Business Type</label>
@@ -203,30 +190,39 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Pincode</label>
+                  <div className="relative">
+                    <input type="number" value={formData.pincode} onChange={e => {
+                        const val = e.target.value.substring(0, 6);
+                        setFormData({...formData, pincode: val});
+                      }} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="110001" />
+                    {isLoadingPincode && <Loader2 className="absolute right-3 top-3.5 text-txt3 animate-spin h-4 w-4" />}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Pincode</label>
-                    <div className="relative">
-                      <input required type="number" value={formData.pincode} onChange={e => {
-                          const val = e.target.value.substring(0, 6);
-                          setFormData({...formData, pincode: val});
-                        }} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="110001" />
-                      {isLoadingPincode && <Loader2 className="absolute right-3 top-3.5 text-txt3 animate-spin h-4 w-4" />}
-                    </div>
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Area</label>
+                    <input type="text" value={formData.area} onChange={e => setFormData({...formData, area: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="Area" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">City</label>
-                    <input required readOnly type="text" value={formData.city} className="w-full bg-dark3/50 border border-border2 rounded-xl px-4 py-3 text-sm text-txt3 focus:outline-none cursor-not-allowed" placeholder="Auto-filled" />
+                    <input type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="City" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">District</label>
+                    <input type="text" value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="District" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">State</label>
-                    <input required readOnly type="text" value={formData.state} className="w-full bg-dark3/50 border border-border2 rounded-xl px-4 py-3 text-sm text-txt3 focus:outline-none cursor-not-allowed" placeholder="Auto-filled" />
+                    <input type="text" value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors" placeholder="State" />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Current Software</label>
-                  <select required value={formData.software} onChange={e => setFormData({...formData, software: e.target.value})} className={`w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-ph-lt transition-colors appearance-none cursor-pointer ${formData.software === '' ? 'text-txt3' : 'text-txt'}`}>
+                  <select value={formData.software} onChange={e => setFormData({...formData, software: e.target.value})} className={`w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-ph-lt transition-colors appearance-none cursor-pointer ${formData.software === '' ? 'text-txt3' : 'text-txt'}`}>
                     <option value="" disabled>Select your software...</option>
                     <option value="Tally">Tally</option>
                     <option value="Marg">Marg</option>
@@ -239,7 +235,7 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
 
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold text-txt3 uppercase tracking-wider">Query Message</label>
-                  <textarea required rows={4} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors resize-none" placeholder="What are you looking for?"></textarea>
+                  <textarea rows={4} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full bg-dark2 border border-border2 rounded-xl px-4 py-3 text-sm text-txt focus:outline-none focus:border-ph-lt transition-colors resize-none" placeholder="What are you looking for?"></textarea>
                 </div>
 
                 <button type="submit" disabled={isSubmitting} className="w-full bg-ph2 hover:bg-ph-lt text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] mt-4 flex justify-center items-center gap-2 text-base">
