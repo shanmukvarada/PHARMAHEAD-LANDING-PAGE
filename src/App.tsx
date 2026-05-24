@@ -81,7 +81,7 @@ const ContactPage = ({ onHome }: { onHome: () => void }) => {
             setFormData(prev => ({ ...prev, city: office.District || office.Block || office.Name || '', state: office.State || '' }));
           }
         } catch (e) {
-          console.error(e);
+          // ignore error to prevent blocking the user
         }
         setIsLoadingPincode(false);
       };
