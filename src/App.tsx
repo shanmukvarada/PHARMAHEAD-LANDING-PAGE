@@ -697,14 +697,14 @@ const StatsBanner = () => (
 );
 
 const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
-  const [isYearly, setIsYearly] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<'1month' | '6months' | '1year'>('6months');
 
   const plans = [
     {
       name: "Starter",
-      price: isYearly ? "₹399" : "₹449",
+      price: billingCycle === '1year' ? "₹399" : billingCycle === '6months' ? "₹449" : "₹499",
       period: "/month",
-      billingText: isYearly ? "Billed ₹4,788 yearly" : "Billed ₹2,694 every 6 months",
+      billingText: billingCycle === '1year' ? "Billed ₹4,788 yearly" : billingCycle === '6months' ? "Billed ₹2,694 every 6 months" : "Billed ₹499 monthly",
       desc: "Billing-first plan for GST invoice and collections.",
       badge: "Retailer ordering disabled",
       features: ["GST invoice creation", "Billing management", "Ledger", "Payment tracking", "Collection tracking"],
@@ -714,9 +714,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Basic",
-      price: isYearly ? "₹599" : "₹649",
+      price: billingCycle === '1year' ? "₹599" : billingCycle === '6months' ? "₹649" : "₹699",
       period: "/month",
-      billingText: isYearly ? "Billed ₹7,188 yearly" : "Billed ₹3,894 every 6 months",
+      billingText: billingCycle === '1year' ? "Billed ₹7,188 yearly" : billingCycle === '6months' ? "Billed ₹3,894 every 6 months" : "Billed ₹699 monthly",
       desc: "Core operational suite for growing sub-wholesalers.",
       badge: "Up to 50 retailers",
       features: ["Order management", "Retailer management", "Billing and finance tools", "Inventory management", "Purchase orders", "Scheme management", "Support tickets"],
@@ -726,9 +726,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Pro",
-      price: isYearly ? "₹799" : "₹749",
+      price: billingCycle === '1year' ? "₹799" : billingCycle === '6months' ? "₹749" : "₹799",
       period: "/month",
-      billingText: isYearly ? "Billed ₹9,588 yearly" : "Billed ₹4,494 every 6 months",
+      billingText: billingCycle === '1year' ? "Billed ₹9,588 yearly" : billingCycle === '6months' ? "Billed ₹4,494 every 6 months" : "Billed ₹799 monthly",
       desc: "Most popular for advanced operations with rack control.",
       badge: "Up to 100 retailers",
       features: ["Everything in Basic", "Rack Manager", "Personal / Priority Support"],
@@ -738,9 +738,9 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
     },
     {
       name: "Superior",
-      price: isYearly ? "₹1,200" : "₹1,250",
+      price: billingCycle === '1year' ? "₹1,200" : billingCycle === '6months' ? "₹1,250" : "₹1,299",
       period: "/month",
-      billingText: isYearly ? "Billed ₹14,400 yearly" : "Billed ₹7,500 every 6 months",
+      billingText: billingCycle === '1year' ? "Billed ₹14,400 yearly" : billingCycle === '6months' ? "Billed ₹7,500 every 6 months" : "Billed ₹1,299 monthly",
       desc: "Full suite with sales team enablement and unlimited scale.",
       badge: "Unlimited retailers",
       features: ["Everything in Pro", "Rack Manager", "Sales Team Management", "Personal Support"],
@@ -759,16 +759,22 @@ const Pricing = ({ onOpenContact }: { onOpenContact: () => void }) => {
       </div>
 
       <div className="flex justify-center mb-6 md:mb-16">
-        <div className="bg-dark3 border border-border2 p-1 md:p-1.5 rounded-full inline-flex items-center">
+        <div className="bg-dark3 border border-border2 p-1 md:p-1.5 rounded-full inline-flex items-center space-x-1">
           <button 
-            onClick={() => setIsYearly(false)}
-            className={`${!isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold transition-all duration-300`}
+            onClick={() => setBillingCycle('1month')}
+            className={`${billingCycle === '1month' ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold transition-all duration-300`}
+          >
+            1 Month
+          </button>
+          <button 
+            onClick={() => setBillingCycle('6months')}
+            className={`${billingCycle === '6months' ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[11px] md:text-sm font-semibold transition-all duration-300`}
           >
             6 Months
           </button>
           <button 
-            onClick={() => setIsYearly(true)}
-            className={`${isYearly ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2 rounded-full text-[11px] md:text-sm font-semibold flex items-center gap-1.5 transition-all duration-300`}
+            onClick={() => setBillingCycle('1year')}
+            className={`${billingCycle === '1year' ? 'bg-ph2 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'text-txt3 hover:text-txt'} px-4 py-2 md:px-6 md:py-2 rounded-full text-[11px] md:text-sm font-semibold flex items-center gap-1.5 transition-all duration-300`}
           >
             1 Year
           </button>
